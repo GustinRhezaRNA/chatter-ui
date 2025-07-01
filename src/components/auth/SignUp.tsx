@@ -7,7 +7,12 @@ const SignUp = () => {
     return (
         <>
             <Auth submitLabel={'Sign Up'} onSubmit={async () => { }} >
-                <p className='text-center'>Already have an account? <Link to={'/login'}> <MUILink>Login</MUILink></Link></p>
+                <p className='text-center'>
+                    Already have an account?{' '}
+                    <MUILink component={Link} to="/login">
+                        Login
+                    </MUILink>
+                </p>
             </Auth>
         </>
     )

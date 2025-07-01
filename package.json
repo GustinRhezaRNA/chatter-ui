@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.8",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.6",
     "@mui/icons-material": "^7.1.2",
     "@mui/material": "^7.1.2",
     "@tailwindcss/vite": "^4.1.10",
+    "graphql": "^16.11.0",
     "localforage": "^1.10.0",
     "match-sorter": "^8.0.3",
     "react": "^19.1.0",
