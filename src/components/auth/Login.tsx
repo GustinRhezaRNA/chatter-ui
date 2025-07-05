@@ -8,9 +8,7 @@ const Login = () => {
 
     return (
         <>
-            <Auth submitLabel={'Login'} onSubmit={async (request) => { login(request) }} error={
-                error ? 'Credentials is not valid' : ""
-            } >
+            <Auth submitLabel={'Login'} onSubmit={async (request) => { login(request) }} error={error} >
                 <p className='text-center'>
                     Do not have an account?{' '}
                     <MUILink component={Link} to="/signup">
