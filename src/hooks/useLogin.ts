@@ -14,6 +14,7 @@ const useLogin = () => {
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -28,9 +29,7 @@ const useLogin = () => {
         return;
       }
       setError('');
-      await client.refetchQueries({
-        include: ['active'],
-      });
+      await client.refetchQueries({ include: 'active'});
     } catch (error) {
       console.error('Login error:', error);
       setError('Network error. Please try again later.');
