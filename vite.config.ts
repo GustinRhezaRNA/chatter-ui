@@ -1,19 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-      tailwindcss(),
-  ],
-    server: {
-     proxy: {
+  plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
       '/graphql': {
-        target: 'http://localhost:3000', // alamat backend 
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/auth': {
+        // ⬅️ proxy untuk auth endpoints
+        target: 'http://localhost:3000',
         changeOrigin: true,
       },
     },
   },
-})
+});
