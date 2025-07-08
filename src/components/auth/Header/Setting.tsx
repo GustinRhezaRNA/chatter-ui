@@ -1,15 +1,17 @@
 import { Avatar, Box, IconButton, Menu, Tooltip } from '@mui/material'
 import { MenuItem, Typography } from '@mui/material'
 import React from 'react';
-const settings = ['Logout'];
+import { useLogout } from '../../../hooks/useLogout';
+import { onLogout } from '../../../utils/logout';
+
 
 const Setting = () => {
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const { logout } = useLogout();
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
     };
-
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
@@ -38,11 +40,18 @@ const Setting = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                 >
-                    {settings.map((setting) => (
-                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                            <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                        </MenuItem>
-                    ))}
+
+                    <MenuItem
+                        key="logout"
+                        onClick={async () => {
+                            await logout();
+                            onLogout();
+                            handleCloseUserMenu();
+                        }}
+                    >
+                        <Typography textAlign="center">Logout</Typography>
+                    </MenuItem>
+
                 </Menu>
             </Box></>
     )
