@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom'
 import { ApolloProvider } from '@apollo/client'
 import client from './constants/apollo-client'
 import { Guard } from './components/auth/Guard'
+import Header from './components/auth/Header/Header'
 
 const darkTheme = createTheme({
   palette: {
@@ -17,6 +18,7 @@ const App = () => {
     <ApolloProvider client={client}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline>
+            <Header/>
           <Container>
             <Guard>
               <RouterProvider router={router} />

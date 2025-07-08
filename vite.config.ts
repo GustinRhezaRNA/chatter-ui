@@ -12,7 +12,6 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/auth': {
-        // ⬅️ proxy untuk auth endpoints
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
