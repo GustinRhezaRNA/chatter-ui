@@ -5,6 +5,7 @@ import { Link as MUILink } from '@mui/material'
 import { useCreateUser } from '../../hooks/useCreateUser'
 import { extractErrorMessage } from '../../utils/error'
 import { useLogin } from '../../hooks/useLogin'
+import { UNKNOWN_ERROR_MESSAGE } from '../../constants/errors'
 
 const SignUp = () => {
     const [createUser] = useCreateUser()
@@ -30,7 +31,7 @@ const SignUp = () => {
                             setError(errorMessage);
                             return;
                         }
-                        setError("Unknown error occurred while creating user");
+                        setError(UNKNOWN_ERROR_MESSAGE);
                     }
                 }}
             >
