@@ -27,10 +27,10 @@ const App = () => {
         <Guard>
           {path === "/" ? (
             <Grid container>
-              <Grid item md={3}>
+              <Grid size={{ md: 3 }} >
                 <ChatList />
               </Grid>
-              <Grid item md={9}>
+              <Grid size={{ md: 3 }}>
                 <Routes />
               </Grid>
             </Grid>

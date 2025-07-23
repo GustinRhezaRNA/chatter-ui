@@ -1,7 +1,7 @@
 import type React from "react";
 import { useGetMe } from "../../hooks/useGetMe"
 import excludedRoutes from "../../constants/excluded-routes";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { authenticatedVar } from "../../constants/authenticated";
 import { snackVar } from "../../constants/snack";
 import { UNKNOWN_ERROR_SNACK_MESSAGE } from "../../constants/errors";
