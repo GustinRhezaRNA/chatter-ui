@@ -23,6 +23,7 @@ const SignUp = () => {
                                 createUserInput: { email, password },
                             },
                         });
+                        
                         await login({ email, password });
                         setError("");
                     } catch (err) {
