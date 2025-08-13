@@ -2,6 +2,7 @@ import { Box, Button, FormControlLabel, FormGroup, IconButton, InputBase, Modal,
 import SearchIcon from '@mui/icons-material/Search';
 import { useState } from "react";
 import { useCreateChat } from "../../../hooks/useCreateChat";
+import { UNKNOWN_ERROR_MESSAGE } from "../../../constants/errors";
 
 interface ChatListAddProps {
     open: boolean;
@@ -9,12 +10,19 @@ interface ChatListAddProps {
 }
 
 const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
-    const [isPrivate, setIsPrivate] = useState(true);
-    const [name, setName] = useState<string | undefined>();
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [error, setError] = useState<string >("");
+    const [name, setName] = useState<string >("");
     const [createChat] = useCreateChat();
+    const onClose = () => {
+        setIsPrivate(false);
+        setName("");
+        setError("");
+        handleClose();
+    }
 
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal open={open} onClose={onClose}>
             <Box sx={
                 {
                     position: 'absolute',
@@ -36,7 +44,7 @@ const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
                         <FormControlLabel
                             control={
                                 <Switch
-                                    defaultChecked
+                                    defaultChecked={isPrivate}
                                     type="checkbox"
                                     value={isPrivate}
                                     onChange={(e) => setIsPrivate(e.target.checked)}
@@ -55,19 +63,29 @@ const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
                                 </IconButton>
                             </Paper>
                         ) : (
-                            <TextField label="name" onChange={(e) => setName(e.target.value)} />
+                            <TextField error={!!error} helperText={error} label="Name" onChange={(e) => setName(e.target.value)} />
 
                         )
                     }
-                    <Button variant="outlined" onClick={() => {
-                        createChat({
-                            variables: {
-                                createChatInput: {
-                                    isPrivate,
-                                    name: name || undefined,
+                    <Button variant="outlined" onClick={async () => {
+                        if (!name && !isPrivate) {
+                            setError("Name is required for group chats");
+                            return;
+                        }
+                        try {
+                            await createChat({
+                                variables: {
+                                    createChatInput: {
+                                        isPrivate,
+                                        name: name || undefined,
+                                    },
                                 },
-                            },
-                        })
+                            })
+                            onClose();
+                        } catch (e) {
+                            setError(UNKNOWN_ERROR_MESSAGE);
+                        }
+                        
                     }}>Save</Button>
                 </Stack>
             </Box>

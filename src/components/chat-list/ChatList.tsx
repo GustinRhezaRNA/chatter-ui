@@ -20,7 +20,7 @@ const ChatList: React.FC = () => {
                     {data?.chats.map((chat) => (
                         <ChatListItem name={chat.name} />
                     ))}
-                    <ChatListItem />
+                    
                 </List>
             </Stack>
         </>
