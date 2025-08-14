@@ -18,9 +18,8 @@ const ChatList: React.FC = () => {
                 <Divider />
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: '80vh', overflow: 'auto' }}>
                     {data?.chats.map((chat) => (
-                        <ChatListItem name={chat.name} />
+                        <ChatListItem chat={chat} />
                     ))}
-                    
                 </List>
             </Stack>
         </>
