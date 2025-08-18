@@ -2,10 +2,15 @@ import { useParams } from "react-router-dom"
 import { useGetChat } from "../../hooks/useGetChat";
 import { Box, Divider, IconButton, InputBase, Paper, Stack, Typography } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
+import { useCreateMessage } from "../../hooks/useCreateMessage";
+import { useState } from "react";
 
 const Chat = () => {
     const params = useParams();
-    const { data, loading } = useGetChat({ _id: params._id! });
+    const [message, setMessage] = useState('');
+    const chatId = params._id!;
+    const { data, loading } = useGetChat({ _id: chatId });
+    const [createMessage] = useCreateMessage();
 
     if (loading) return <Typography>Loading...</Typography>;
 
@@ -57,6 +62,8 @@ const Chat = () => {
                     }}
                 >
                     <InputBase
+                        onChange={(e) => setMessage(e.target.value)}
+                        value={message}
                         sx={{ ml: 1, flex: 1 }}
                         placeholder="Type a message..."
                         multiline
@@ -64,6 +71,16 @@ const Chat = () => {
                     />
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
                     <IconButton
+                        onClick={() => {
+                            createMessage({
+                                variables: {
+                                    createMessageInput: {
+                                        chatId,
+                                        content: message
+                                    }
+                                }
+                            });
+                        }}
                         color="primary"
                         sx={{ p: "8px" }}
                         size="small"
