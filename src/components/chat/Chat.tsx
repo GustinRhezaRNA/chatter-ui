@@ -4,6 +4,7 @@ import { Box, Divider, IconButton, InputBase, Paper, Stack, Typography } from "@
 import SendIcon from '@mui/icons-material/Send';
 import { useCreateMessage } from "../../hooks/useCreateMessage";
 import { useState } from "react";
+import { useGetMessages } from "../../hooks/useGetMassage";
 
 const Chat = () => {
     const params = useParams();
@@ -11,6 +12,8 @@ const Chat = () => {
     const chatId = params._id!;
     const { data, loading } = useGetChat({ _id: chatId });
     const [createMessage] = useCreateMessage();
+    const { data: messages } = useGetMessages({ chatId });
+
 
     if (loading) return <Typography>Loading...</Typography>;
 
@@ -40,9 +43,24 @@ const Chat = () => {
                 overflow: 'auto',
                 backgroundColor: 'background.default'
             }}>
-                <Typography variant="body2" color="text.secondary">
-                    No messages yet. Start the conversation!
-                </Typography>
+                {messages?.messages?.length ? (
+                    <Box>
+                        {messages.messages.map((message) => (
+                            <Box key={message._id} sx={{ mb: 2 }}>
+                                <Typography variant="body1" color="text.primary">
+                                    {message.content}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    {new Date(message.createdAt).toLocaleTimeString()}
+                                </Typography>
+                            </Box>
+                        ))}
+                    </Box>
+                ) : (
+                    <Typography variant="body2" color="text.secondary">
+                        No messages yet. Start the conversation!
+                    </Typography>
+                )}
             </Box>
 
             {/* Input Area */}
@@ -71,15 +89,22 @@ const Chat = () => {
                     />
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
                     <IconButton
-                        onClick={() => {
-                            createMessage({
-                                variables: {
-                                    createMessageInput: {
-                                        chatId,
-                                        content: message
-                                    }
+                        onClick={async () => {
+                            if (message.trim()) {
+                                try {
+                                    await createMessage({
+                                        variables: {
+                                            createMessageInput: {
+                                                chatId,
+                                                content: message.trim()
+                                            }
+                                        }
+                                    });
+                                    setMessage(''); // Clear input after sending
+                                } catch (error) {
+                                    console.error('Error sending message:', error);
                                 }
-                            });
+                            }
                         }}
                         color="primary"
                         sx={{ p: "8px" }}
