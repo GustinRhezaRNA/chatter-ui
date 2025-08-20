@@ -47,7 +47,7 @@ const Chat = () => {
 
     return (
         <Stack sx={{ height: "100%", justifyContent: "space-between" }}>
-             {/* Header */}
+            {/* Header */}
             <Box sx={{
                 p: 2,
                 borderBottom: 1,
@@ -59,17 +59,33 @@ const Chat = () => {
                 </Typography>
             </Box>
             {/* Messages */}
-            <Box sx={{ maxHeight: "70vh", overflow: "auto" }}>
+            <Box sx={{ maxHeight: "70vh", overflow: "auto", p: 1 }}>
                 {messages?.messages.map((message) => (
-                    <Box key={message._id} sx={{ display: "flex", alignItems: "flex-start", mb: 1, gap: 1.5 }}>
-                        <Avatar src="" sx={{ width: 36, height: 36 }} />
-                        <Box sx={{ flex: 1 }}>
-                            <Paper sx={{ width: "fit-content", maxWidth: "60%" }}>
-                                <Typography sx={{ p: "0.5rem" }}>
+                    <Box key={message._id} sx={{ display: "flex", alignItems: "flex-start", mb: 2, gap: 1 }}>
+                        <Box sx={{ flexShrink: 0 }}>
+                            <Avatar src="" sx={{ width: 40, height: 40 }} />
+                        </Box>
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <Paper sx={{
+                                width: "fit-content",
+                                maxWidth: "100%",
+                                wordWrap: "break-word",
+                                overflow: "hidden"
+                            }}>
+                                <Typography sx={{
+                                    p: "0.75rem",
+                                    wordBreak: "break-word",
+                                    overflowWrap: "break-word"
+                                }}>
                                     {message.content}
                                 </Typography>
                             </Paper>
-                            <Typography variant="caption" sx={{ ml: 0.5, color: "text.secondary" }}>
+                            <Typography variant="caption" sx={{
+                                ml: 0.5,
+                                color: "text.secondary",
+                                display: "block",
+                                mt: 0.5
+                            }}>
                                 {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
                             </Typography>
                         </Box>
@@ -85,6 +101,7 @@ const Chat = () => {
                     justifySelf: "flex-end",
                     alignItems: "center",
                     width: "100%",
+                    margin: '1rem 0'
                 }}
             >
                 <InputBase

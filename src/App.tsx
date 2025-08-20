@@ -26,18 +26,20 @@ const App = () => {
         <CssBaseline />
         <Header />
         <Guard>
-          {showChatList ? (
-            <Grid container>
-              <Grid size={{ md: 3 }} >
-                <ChatList />
+          <Container maxWidth='xl'>
+            {showChatList ? (
+              <Grid container spacing={5}>
+                <Grid size={{ md: 5, xs: 12, lg: 4, xl: 3 }} >
+                  <ChatList />
+                </Grid>
+                <Grid size={{ md: 7, xs: 12, lg: 8, xl: 9 }} >
+                  <Routes />
+                </Grid>
               </Grid>
-              <Grid size={{ md: 9 }}>
-                <Routes />
-              </Grid>
-            </Grid>
-          ) : (
-            <Routes />
-          )}
+            ) : (
+              <Routes />
+            )}
+          </Container>
         </Guard>
         <CustomizedSnackbars />
       </ThemeProvider>
@@ -47,9 +49,7 @@ const App = () => {
 
 const Routes = () => {
   return (
-    <Container sx={{ height: '100%' }}>
-      <RouterProvider router={router} />
-    </Container>
+    <RouterProvider router={router} />
   )
 }
 

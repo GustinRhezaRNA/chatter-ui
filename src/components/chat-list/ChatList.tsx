@@ -26,7 +26,7 @@ const ChatList: React.FC = () => {
             <Stack>
                 <ChatListHeader handleAddChat={() => setChatListAddVisible(true)} />
                 <Divider />
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: '80vh', overflow: 'auto' }}>
+                <List sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: '80vh', overflow: 'auto' }}>
                     {data?.chats.map((chat) => (
                         <ChatListItem chat={chat}
                             selected={selectedChatId === chat._id} key={chat._id}
