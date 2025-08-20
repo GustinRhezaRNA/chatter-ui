@@ -14,4 +14,4 @@ const useGetMessages = (variables: MessagesQueryVariables) => {
   return useQuery(getMessagesDocument, { variables });
 };
 
-export { useGetMessages };
+export { useGetMessages, getMessagesDocument };
