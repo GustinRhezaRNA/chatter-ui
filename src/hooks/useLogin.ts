@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import API_URL from '../constants/urls';
+import { API_URL } from '../constants/urls';
 import client from '../constants/apollo-client';
 import { UNKNOWN_ERROR_MESSAGE } from '../constants/errors';
 
@@ -30,7 +30,7 @@ const useLogin = () => {
         return;
       }
       setError('');
-      await client.refetchQueries({ include: 'active'});
+      await client.refetchQueries({ include: 'active' });
     } catch (error) {
       console.error('Login error:', error);
       setError('Network error. Please try again later.');

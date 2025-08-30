@@ -1,4 +1,4 @@
-import API_URL from '../constants/urls';
+import { API_URL } from '../constants/urls';
 
 const useLogout = () => {
   const logout = async () => {
@@ -14,7 +14,7 @@ const useLogout = () => {
     } catch (error) {
       // Tangkap semua error termasuk network errors
       console.error('Logout error:', error);
-      
+
       // Re-throw error agar bisa ditangkap oleh calling code
       throw new Error('Connection failed');
     }
