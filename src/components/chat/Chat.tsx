@@ -15,6 +15,7 @@ import { useCreateMessage } from "../../hooks/useCreateMessage";
 import { useEffect, useRef, useState } from "react";
 import { useGetMessages } from "../../hooks/useGetMassage";
 import { useMessageCreated } from "../../hooks/useMessageCreated";
+import type { Message } from "../../gql/graphql";
 
 const Chat = () => {
     const params = useParams();
@@ -22,13 +23,18 @@ const Chat = () => {
     const [message, setMessage] = useState('');
     const chatId = params._id!;
     const { data } = useGetChat({ _id: chatId });
-    const [createMessage] = useCreateMessage(chatId);
-    const { data: messages } = useGetMessages({ chatId });
+    const [createMessage] = useCreateMessage();
+    const { data: existingMessages } = useGetMessages({ chatId });
+    const [messages, setMessages] = useState<Message[]>([]);
     const divRef = useRef<HTMLDivElement | null>(null);
-    const {data : latestMessage} = useMessageCreated({ chatId });
-    console.log(latestMessage);
+    useMessageCreated({ chatId });
 
     const scrollToBottom = () => divRef.current?.scrollIntoView();
+    useEffect(() => {
+        if (existingMessages) {
+            setMessages(existingMessages.messages);
+        }
+    }, [existingMessages])
 
     useEffect(() => {
         setMessage("");
@@ -63,37 +69,41 @@ const Chat = () => {
             </Box>
             {/* Messages */}
             <Box sx={{ maxHeight: "70vh", overflow: "auto", p: 1 }}>
-                {messages?.messages.map((message) => (
-                    <Box key={message._id} sx={{ display: "flex", alignItems: "flex-start", mb: 2, gap: 1 }}>
-                        <Box sx={{ flexShrink: 0 }}>
-                            <Avatar src="" sx={{ width: 40, height: 40 }} />
-                        </Box>
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                            <Paper sx={{
-                                width: "fit-content",
-                                maxWidth: "100%",
-                                wordWrap: "break-word",
-                                overflow: "hidden"
-                            }}>
-                                <Typography sx={{
-                                    p: "0.75rem",
-                                    wordBreak: "break-word",
-                                    overflowWrap: "break-word"
+                {[...messages].sort((messageA, messageB) =>
+                    new Date(messageA.createdAt).getTime() -
+                    new Date(messageB.createdAt).getTime())
+                    .map((message) => (
+                        <Box key={message._id}
+                            sx={{ display: "flex", alignItems: "flex-start", mb: 2, gap: 1 }}>
+                            <Box sx={{ flexShrink: 0 }}>
+                                <Avatar src="" sx={{ width: 40, height: 40 }} />
+                            </Box>
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                <Paper sx={{
+                                    width: "fit-content",
+                                    maxWidth: "100%",
+                                    wordWrap: "break-word",
+                                    overflow: "hidden"
                                 }}>
-                                    {message.content}
+                                    <Typography sx={{
+                                        p: "0.75rem",
+                                        wordBreak: "break-word",
+                                        overflowWrap: "break-word"
+                                    }}>
+                                        {message.content}
+                                    </Typography>
+                                </Paper>
+                                <Typography variant="caption" sx={{
+                                    ml: 0.5,
+                                    color: "text.secondary",
+                                    display: "block",
+                                    mt: 0.5
+                                }}>
+                                    {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
                                 </Typography>
-                            </Paper>
-                            <Typography variant="caption" sx={{
-                                ml: 0.5,
-                                color: "text.secondary",
-                                display: "block",
-                                mt: 0.5
-                            }}>
-                                {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-                            </Typography>
+                            </Box>
                         </Box>
-                    </Box>
-                ))}
+                    ))}
                 <div ref={divRef}></div>
             </Box>
             {/* Input */}
