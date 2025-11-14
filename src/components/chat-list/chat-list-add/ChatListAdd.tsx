@@ -1,5 +1,4 @@
-import { Box, Button, FormControlLabel, FormGroup, IconButton, InputBase, Modal, Paper, Stack, Switch, TextField, Typography } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
+import { Box, Button, Modal, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useCreateChat } from "../../../hooks/useCreateChat";
 import { UNKNOWN_ERROR_MESSAGE } from "../../../constants/errors";
@@ -11,12 +10,10 @@ interface ChatListAddProps {
 }
 
 const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
-    const [isPrivate, setIsPrivate] = useState(false);
-    const [error, setError] = useState<string >("");
-    const [name, setName] = useState<string >("");
+    const [error, setError] = useState<string>("");
+    const [name, setName] = useState<string>("");
     const [createChat] = useCreateChat();
     const onClose = () => {
-        setIsPrivate(false);
         setName("");
         setError("");
         handleClose();
@@ -41,54 +38,25 @@ const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
                     <Typography variant="h6" component="h2">
                         Add New Chat
                     </Typography>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    defaultChecked={isPrivate}
-                                    type="checkbox"
-                                    value={isPrivate}
-                                    onChange={(e) => setIsPrivate(e.target.checked)}
-                                />
-                            }
-                            label="Private"
-                        >
-                        </FormControlLabel>
-                    </FormGroup>
-                    {
-                        isPrivate ? (
-                            <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
-                                <InputBase sx={{ ml: "1", flex: "1" }} placeholder="Search Users" />
-                                <IconButton sx={{ p: "10px" }} aria-label="search">
-                                    <SearchIcon />
-                                </IconButton>
-                            </Paper>
-                        ) : (
-                            <TextField error={!!error} helperText={error} label="Name" onChange={(e) => setName(e.target.value)} />
-
-                        )
-                    }
+                    <TextField error={!!error} helperText={error} label="Name" onChange={(e) => setName(e.target.value)} />
                     <Button variant="outlined" onClick={async () => {
-                        if (!name && !isPrivate) {
+                        if (!name) {
                             setError("Name is required for group chats");
                             return;
                         }
                         try {
                             const chat = await createChat({
                                 variables: {
-                                    createChatInput: {
-                                        isPrivate,
-                                        name: name || undefined,
-                                    },
+                                    createChatInput: { name },
                                 },
-                            })
+                            });
                             onClose();
                             router.navigate(`/chats/${chat.data?.createChat._id}`);
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         } catch (e) {
                             setError(UNKNOWN_ERROR_MESSAGE);
                         }
-                        
+
                     }}>Save</Button>
                 </Stack>
             </Box>

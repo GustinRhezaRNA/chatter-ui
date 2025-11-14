@@ -14,7 +14,6 @@ import SendIcon from '@mui/icons-material/Send';
 import { useCreateMessage } from "../../hooks/useCreateMessage";
 import { useEffect, useRef, useState } from "react";
 import { useGetMessages } from "../../hooks/useGetMassage";
-import { useMessageCreated } from "../../hooks/useMessageCreated";
 import type { Message } from "../../gql/graphql";
 
 const Chat = () => {
@@ -27,7 +26,6 @@ const Chat = () => {
     const { data: existingMessages } = useGetMessages({ chatId });
     const [messages, setMessages] = useState<Message[]>([]);
     const divRef = useRef<HTMLDivElement | null>(null);
-    useMessageCreated({ chatId });
 
     const scrollToBottom = () => divRef.current?.scrollIntoView();
     useEffect(() => {
