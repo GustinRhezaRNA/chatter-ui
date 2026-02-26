@@ -12,9 +12,11 @@ import {
 } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { useCreateMessage } from "../../hooks/useCreateMessage";
-import { useEffect, useRef, useState } from "react";
-import { useGetMessages } from "../../hooks/useGetMassage";
+import { use, useEffect, useRef, useState } from "react";
+import { useGetMessages } from "../../hooks/useGetMessages";
 import type { Message } from "../../gql/graphql";
+import { PAGE_SIZE } from "../../constants/page-size";
+import useCountMessages from "../../hooks/useCountMessages";
 
 const Chat = () => {
     const params = useParams();
@@ -23,9 +25,14 @@ const Chat = () => {
     const chatId = params._id!;
     const { data } = useGetChat({ _id: chatId });
     const [createMessage] = useCreateMessage();
-    const { data: existingMessages } = useGetMessages({ chatId });
+    const { data: existingMessages } = useGetMessages({ chatId, skip: 0, limit: PAGE_SIZE });
     const [messages, setMessages] = useState<Message[]>([]);
     const divRef = useRef<HTMLDivElement | null>(null);
+    const { messagesCount, countMessages } = useCountMessages(chatId);
+
+    useEffect(() => {
+        countMessages();
+    }, [countMessages]);   
 
     const scrollToBottom = () => divRef.current?.scrollIntoView();
     useEffect(() => {

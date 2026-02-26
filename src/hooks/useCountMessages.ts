@@ -1,0 +1,26 @@
+import { useCallback, useState } from 'react';
+import { API_URL } from '../constants/urls';
+import { snackVar } from '../constants/snack';
+import { UNKNOWN_ERROR_SNACK_MESSAGE } from '../constants/errors';
+
+const useCountMessages = (chatId: string) => {
+  const [messagesCount, setmessagesCount] = useState<number | undefined>(0);
+
+  const countMessages = useCallback(async () => {
+    const res = await fetch(`${API_URL}/messages/count?chatId=${chatId}`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!res.ok) {
+      snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+      return;
+    }
+    const { messages } = await res.json();
+    setmessagesCount(messages);
+  }, [chatId]);
+  return { messagesCount, countMessages };
+};
+
+export default useCountMessages;
