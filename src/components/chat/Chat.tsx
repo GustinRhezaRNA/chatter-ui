@@ -276,8 +276,7 @@ const Chat = () => {
                         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
                         <IconButton
                             onClick={handleCreateMessage}
-                            color="primary"
-                            sx={{ p: "10px" }}
+                            sx={{ p: "10px", color: "#6A52DE" }}
                         >
                             <SendIcon />
                         </IconButton>

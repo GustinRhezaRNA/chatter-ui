@@ -1,10 +1,7 @@
-import { Box, Button, Divider, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useGetMe } from '../../hooks/useGetMe';
 import { useNavigate } from 'react-router-dom';
-import GoogleIcon from '@mui/icons-material/Google';
-import AppleIcon from '@mui/icons-material/Apple';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export interface FieldErrors {
     email?: string;
@@ -58,7 +55,7 @@ const Auth = ({ submitLabel, onSubmit, children, error, fieldErrors, extraFields
     const passwordError = fieldErrors?.password ?? error;
 
     useEffect(() => {
-        if (data && data.me) { // Only navigate if we actually have a logged-in user
+        if (data && data.me) {
             navigate('/')
         }
     }, [data, navigate])
@@ -76,29 +73,32 @@ const Auth = ({ submitLabel, onSubmit, children, error, fieldErrors, extraFields
                     flexBasis: { xs: '30%', md: '50%' },
                     flexShrink: 0,
                     flexGrow: 0,
-                    backgroundImage: 'url(/auth_bg.png)',
+                    position: 'relative',
+                    backgroundColor: '#6A52DE',
+                    backgroundImage: 'url(/bg.png)',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    position: 'relative',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     p: { xs: 3, md: 6 },
+                    m: { xs: 0, md: 2 },
+                    borderRadius: '0.5rem',
                     color: 'white'
                 }}
             >
                 {/* Top Bar on Image */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', letterSpacing: 2 }}>
-                        Chatter
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', letterSpacing: 2, fontFamily: 'sans-serif' }}>
+                        CHATTER
                     </Typography>
                 </Box>
 
                 {/* Bottom Text on Image (Hidden on very small mobile to save space) */}
                 <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 4 }, display: { xs: 'none', sm: 'block' } }}>
                     <Typography variant="h3" sx={{ fontWeight: 500, mb: 3, fontSize: { sm: '2rem', md: '3rem' } }}>
-                        Capturing Moments,<br />Creating Memories
+                        Ask to the world,<br /> See other's perception
                     </Typography>
                     {/* Fake carousel indicators */}
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
@@ -180,47 +180,6 @@ const Auth = ({ submitLabel, onSubmit, children, error, fieldErrors, extraFields
                             {submitLabel}
                         </Button>
                     </form>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                        <Divider sx={{ flexGrow: 1, borderColor: '#444' }} />
-                        <Typography sx={{ color: '#888', px: 2, fontSize: '0.875rem' }}>
-                            Or register with
-                        </Typography>
-                        <Divider sx={{ flexGrow: 1, borderColor: '#444' }} />
-                    </Box>
-
-                    <Box sx={{ display: 'flex', gap: 2 }}>
-                        <Button
-                            variant="outlined"
-                            fullWidth
-                            startIcon={<GoogleIcon sx={{ color: '#EA4335' }} />}
-                            sx={{
-                                color: 'white',
-                                borderColor: '#444',
-                                textTransform: 'none',
-                                py: 1,
-                                borderRadius: '8px',
-                                '&:hover': { borderColor: '#666', bgcolor: 'rgba(255,255,255,0.05)' }
-                            }}
-                        >
-                            Google
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            fullWidth
-                            startIcon={<AppleIcon />}
-                            sx={{
-                                color: 'white',
-                                borderColor: '#444',
-                                textTransform: 'none',
-                                py: 1,
-                                borderRadius: '8px',
-                                '&:hover': { borderColor: '#666', bgcolor: 'rgba(255,255,255,0.05)' }
-                            }}
-                        >
-                            Apple
-                        </Button>
-                    </Box>
 
                 </Box>
             </Box>
