@@ -11,7 +11,10 @@ const getMessagesDocument = graphql(`
 `);
 
 const useGetMessages = (variables: MessagesQueryVariables) => {
-  return useQuery(getMessagesDocument, { variables });
+  return useQuery(getMessagesDocument, {
+    variables,
+    fetchPolicy: 'cache-and-network',
+  });
 };
 
 export { useGetMessages, getMessagesDocument };

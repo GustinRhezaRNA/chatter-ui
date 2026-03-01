@@ -12,33 +12,48 @@ interface ChatListAddProps {
 const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
     const [error, setError] = useState<string>("");
     const [name, setName] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
     const [createChat] = useCreateChat();
+
     const onClose = () => {
         setName("");
+        setDescription("");
         setError("");
         handleClose();
     }
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box sx={
-                {
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    p: 4,
-                }
-            }>
+            <Box sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                bgcolor: 'background.paper',
+                border: '2px solid #000',
+                boxShadow: 24,
+                p: 4,
+            }}>
                 <Stack spacing={2}>
                     <Typography variant="h6" component="h2">
-                        Add New Chat
+                        Add New Group Chat
                     </Typography>
-                    <TextField error={!!error} helperText={error} label="Name" onChange={(e) => setName(e.target.value)} />
+                    <TextField
+                        error={!!error}
+                        helperText={error}
+                        label="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    <TextField
+                        label="Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        multiline
+                        rows={3}
+                        placeholder="Optional description..."
+                    />
                     <Button variant="outlined" onClick={async () => {
                         if (!name) {
                             setError("Name is required for group chats");
@@ -47,7 +62,10 @@ const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
                         try {
                             const chat = await createChat({
                                 variables: {
-                                    createChatInput: { name },
+                                    createChatInput: {
+                                        name,
+                                        ...(description ? { description } : {}),
+                                    },
                                 },
                             });
                             onClose();
@@ -56,11 +74,10 @@ const ChatListAdd = ({ open, handleClose }: ChatListAddProps) => {
                         } catch (e) {
                             setError(UNKNOWN_ERROR_MESSAGE);
                         }
-
                     }}>Save</Button>
                 </Stack>
             </Box>
-        </Modal >
+        </Modal>
     )
 }
 
