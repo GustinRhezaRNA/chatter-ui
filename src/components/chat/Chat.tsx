@@ -88,12 +88,7 @@ const Chat = () => {
     // Subscribe to new messages in this chat and append them in real-time
     useMessageCreated(
         { chatIds: [chatId] },
-        (newMessage) => {
-            setMessages((prev) => {
-                // Avoid duplicates (e.g. message sent by self already added optimistically)
-                if (prev.some((m) => m._id === newMessage._id)) return prev;
-                return [...prev, newMessage];
-            });
+        () => {
             scrollToBottom();
         }
     );
@@ -104,16 +99,22 @@ const Chat = () => {
     }, [location.pathname, messages]);
 
     const handleCreateMessage = async () => {
-        await createMessage({
-            variables: {
-                createMessageInput: {
-                    content: message,
-                    chatId
-                }
-            },
-        });
-        setMessage("");
-        scrollToBottom();
+        if (!message.trim()) return;
+
+        try {
+            await createMessage({
+                variables: {
+                    createMessageInput: {
+                        content: message,
+                        chatId
+                    }
+                },
+            });
+            setMessage("");
+            scrollToBottom();
+        } catch (error) {
+            console.error("Failed to send message:", error);
+        }
     };
 
     return (

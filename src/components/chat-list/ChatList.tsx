@@ -9,6 +9,7 @@ import { useMessageCreated } from '../../hooks/useMessageCreated';
 import { PAGE_SIZE } from '../../constants/page-size';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import useCountChats from '../../hooks/useCountChats';
+import { useChatCreated } from '../../hooks/useChatCreated';
 
 const ChatList: React.FC = () => {
     const [chatListAddVisible, setChatListAddVisible] = useState(false);
@@ -31,6 +32,7 @@ const ChatList: React.FC = () => {
     }, [data?.chats.length, countChats]);
 
     useMessageCreated({ chatIds: data?.chats.map((chat) => chat._id) || [] });
+    useChatCreated();
 
     useEffect(() => {
         const pathSplit = path.split('chats/');

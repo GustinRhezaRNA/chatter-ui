@@ -43,7 +43,7 @@ const client = new ApolloClient({
             keyArgs: false,
             merge,
           },
-          messages:{
+          messages: {
             keyArgs: ["chatId"],
             merge,
           }
@@ -55,10 +55,17 @@ const client = new ApolloClient({
   link: logoutLink.concat(splitLink),
 });
 
-function merge(existing: any, incoming: any, { args }: { args: { skip: number } }) {
+function merge(existing: any, incoming: any, { args }: { args: Record<string, any> | null }) {
   const merged = existing ? existing.slice(0) : [];
-  for (let i = 0; i < incoming.length; ++i) {
-    merged[args!.skip + i] = incoming[i];
+  if (incoming) {
+    if (args) {
+      const skip = args.skip || 0;
+      for (let i = 0; i < incoming.length; ++i) {
+        merged[skip + i] = incoming[i];
+      }
+    } else {
+      return incoming;
+    }
   }
   return merged;
 }
