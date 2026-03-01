@@ -4,12 +4,16 @@ import React from 'react';
 import { useLogout } from '../../../hooks/useLogout';
 import { onLogout } from '../../../utils/logout';
 import { snackVar } from '../../../constants/snack';
-import { UNKNOWN_ERROR_SNACK_MESSAGE } from '../../../constants/errors';
+import { authenticatedVar } from '../../../constants/authenticated';
+import router from '../../Routes';
+import { useGetMe } from '../../../hooks/useGetMe';
 
 
 const Setting = () => {
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const { logout } = useLogout();
+
+    const me = useGetMe();
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -18,12 +22,13 @@ const Setting = () => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
     return (
         <>
             <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src="" />
+                        <Avatar alt={me.data?.me?.username} src={me.data?.me?.imageUrl} />
                     </IconButton>
                 </Tooltip>
                 <Menu
@@ -42,23 +47,29 @@ const Setting = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                 >
-
+                    <MenuItem
+                        key="profile"
+                        onClick={() => {
+                            handleCloseUserMenu();
+                            router.navigate('/profile');
+                        }}
+                    >
+                        <Typography textAlign="center">Profile</Typography>
+                    </MenuItem>
                     <MenuItem
                         key="logout"
                         onClick={async () => {
-                            console.log('MenuItem clicked'); // Debug 1
+                            // Set logged-out state IMMEDIATELY so Guard doesn't
+                            // misread the post-logout getMe 401 as "session expired"
+                            authenticatedVar(false);
                             try {
-                                console.log('About to call logout'); // Debug 2
                                 await logout();
-                                console.log('Logout successful'); // Debug 3
-                                onLogout();
-                                handleCloseUserMenu();
-                            } catch (err) {
-                                console.log('MenuItem caught error:', err);
-                                snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
-                                console.log('snackVar set to:', snackVar()); // Debug log
-                                console.log('UNKNOWN_ERROR_SNACK_MESSAGE:', UNKNOWN_ERROR_SNACK_MESSAGE);
+                            } catch {
+                                // Server call failed — still clear locally
                             }
+                            handleCloseUserMenu();
+                            onLogout();
+                            snackVar({ message: 'Logged out successfully', type: 'success' });
                         }}
                     >
                         <Typography textAlign="center">Logout</Typography>

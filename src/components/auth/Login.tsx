@@ -1,23 +1,22 @@
 import Auth from './Auth'
 import { Link } from 'react-router-dom'
-import { Link as MUILink } from '@mui/material'
 import { useLogin } from '../../hooks/useLogin'
 
 const Login = () => {
     const { login, error } = useLogin()
 
     return (
-        <>
-            <Auth submitLabel={'Login'} onSubmit={async (request) => { login(request) }} error={error} >
-                <p className='text-center'>
-                    Do not have an account?{' '}
-                    <MUILink component={Link} to="/signup">
-                        Sign Up
-                    </MUILink>
-                </p>
-
-            </Auth >
-        </>
+        <Auth
+            title="Log in to your account"
+            subtitle={
+                <span>
+                    Don't have an account? <Link to="/signup" style={{ color: '#7B61FF', textDecoration: 'none' }}>Sign up</Link>
+                </span>
+            }
+            submitLabel="Log in"
+            onSubmit={async (request) => { await login(request) }}
+            error={error}
+        />
     )
 }
 

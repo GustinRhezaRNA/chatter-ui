@@ -11,7 +11,7 @@ interface LoginRequest {
 const useLogin = () => {
   const [error, setError] = useState<string>();
 
-  const login = async (request: LoginRequest) => {
+  const login = async (request: LoginRequest): Promise<string | undefined> => {
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
@@ -22,18 +22,18 @@ const useLogin = () => {
         body: JSON.stringify(request),
       });
       if (!res.ok) {
-        if (res.status === 401) {
-          setError('Credentials are invalid');
-        } else {
-          setError(UNKNOWN_ERROR_MESSAGE);
-        }
-        return;
+        const msg = res.status === 401 ? 'Credentials are invalid' : UNKNOWN_ERROR_MESSAGE;
+        setError(msg);
+        return msg;
       }
       setError('');
       await client.refetchQueries({ include: 'active' });
+      return undefined;
     } catch (error) {
       console.error('Login error:', error);
-      setError('Network error. Please try again later.');
+      const msg = 'Network error. Please try again later.';
+      setError(msg);
+      return msg;
     }
   };
   return { login, error };

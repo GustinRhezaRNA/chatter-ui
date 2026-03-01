@@ -14,7 +14,9 @@ const useCountChats = () => {
       },
     });
     if (!res.ok) {
-      snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+      if (res.status !== 401) {
+        snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+      }
       return;
     }
     setChatsCount(parseInt(await res.text()));

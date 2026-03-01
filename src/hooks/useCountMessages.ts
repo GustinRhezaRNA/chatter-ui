@@ -14,7 +14,9 @@ const useCountMessages = (chatId: string) => {
       },
     });
     if (!res.ok) {
-      snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+      if (res.status !== 401) {
+        snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+      }
       return;
     }
     const { messages } = await res.json();

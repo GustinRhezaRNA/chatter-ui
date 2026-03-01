@@ -2,9 +2,9 @@ import type React from "react";
 import { useGetMe } from "../../hooks/useGetMe"
 import excludedRoutes from "../../constants/excluded-routes";
 import { useEffect } from "react";
+import router from "../Routes";
 import { authenticatedVar } from "../../constants/authenticated";
 import { snackVar } from "../../constants/snack";
-import { UNKNOWN_ERROR_SNACK_MESSAGE } from "../../constants/errors";
 import { usePath } from "../../hooks/usePath";
 
 interface GuardProps {
@@ -12,9 +12,16 @@ interface GuardProps {
 }
 
 const Guard = ({ children }: GuardProps) => {
-    //useGetMe() tidak langsung return user, tapi data.me
     const { data: user, error } = useGetMe()
     const { path } = usePath();
+
+    useEffect(() => {
+        // If on the root path and we've determined user is not authenticated, redirect to login
+        if (path === '/' && !user && error) {
+            router.navigate('/login', { replace: true });
+        }
+    }, [path, user, error]);
+
     useEffect(() => {
         if (user) {
             authenticatedVar(true);
@@ -23,13 +30,25 @@ const Guard = ({ children }: GuardProps) => {
 
     useEffect(() => {
         if (error) {
-            if (error.networkError) {
-                snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+            const isAuthError = error.graphQLErrors?.some(
+                (e) => e.extensions?.code === 'UNAUTHENTICATED' ||
+                    (e.extensions?.originalError as any)?.statusCode === 401
+            );
+            const isNetworkError = !!error.networkError;
+
+            if (isAuthError) {
+                // Only show "session expired" if the user was actually logged in.
+                // After a deliberate logout, authenticatedVar is already false — skip the snack.
+                if (authenticatedVar()) {
+                    authenticatedVar(false);
+                    snackVar({ message: 'Session expired, please log in again', type: 'warning' });
+                }
+            } else if (isNetworkError) {
+                snackVar({ message: 'Connection error, please try again', type: 'error' });
             }
         }
     }, [error]);
 
-    console.log(user);
     return <>
         {
             excludedRoutes.includes(path) ? children : user && children

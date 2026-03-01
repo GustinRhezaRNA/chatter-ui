@@ -1,5 +1,5 @@
 import './App.css'
-import { Container, createTheme, CssBaseline, Grid, ThemeProvider } from '@mui/material'
+import { Box, Container, createTheme, CssBaseline, Grid, ThemeProvider, useMediaQuery } from '@mui/material'
 import router from './components/Routes'
 import { RouterProvider } from 'react-router-dom'
 import { ApolloProvider } from '@apollo/client'
@@ -18,24 +18,41 @@ const darkTheme = createTheme({
 
 const App = () => {
   const { path } = usePath();
+  const isMobile = useMediaQuery(darkTheme.breakpoints.down('md'));
   const showChatList = path === '/' || path.includes('chats');
+  const isMobileChatOpen = isMobile && /\/chats\/.+/.test(path);
+  const isProfilePage = path === '/profile';
+  const isAuthPage = path === '/login' || path === '/signup';
+  const hideHeader = isMobileChatOpen || isProfilePage || isAuthPage;
 
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Header />
+        {!hideHeader && <Header />}
         <Guard>
-          <Container maxWidth='xl'>
+          <Container maxWidth='xl' disableGutters>
             {showChatList ? (
-              <Grid container spacing={5}>
-                <Grid size={{ md: 5, xs: 12, lg: 4, xl: 3 }} >
+              isMobile ? (
+                // Mobile: show either the chat list OR the full-screen chat, never both
+                isMobileChatOpen ? (
+                  <Box sx={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}>
+                    <Routes />
+                  </Box>
+                ) : (
                   <ChatList />
+                )
+              ) : (
+                // Desktop: side-by-side layout
+                <Grid container>
+                  <Grid size={{ md: 5, lg: 4, xl: 3 }}>
+                    <ChatList />
+                  </Grid>
+                  <Grid size={{ md: 7, lg: 8, xl: 9 }}>
+                    <Routes />
+                  </Grid>
                 </Grid>
-                <Grid size={{ md: 7, xs: 12, lg: 8, xl: 9 }} >
-                  <Routes />
-                </Grid>
-              </Grid>
+              )
             ) : (
               <Routes />
             )}
@@ -43,7 +60,7 @@ const App = () => {
         </Guard>
         <CustomizedSnackbars />
       </ThemeProvider>
-    </ApolloProvider >
+    </ApolloProvider>
   )
 }
 

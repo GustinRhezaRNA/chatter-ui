@@ -3,6 +3,7 @@ import SignUp from './auth/SignUp.tsx'
 import Login from './auth/Login.tsx'
 import Home from './home/Home.tsx'
 import Chat from './chat/Chat.tsx'
+import Profile from './profile/Profile.tsx'
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
         path: "/chats/:_id",
         element: <Chat />,
     },
+    {
+        path: "/profile",
+        element: <Profile />,
+    }
 ])
 
 export default router

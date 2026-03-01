@@ -10,9 +10,7 @@ import { useReactiveVar } from '@apollo/client';
 import { authenticatedVar } from '../../../constants/authenticated';
 import type { Page } from '../../../interfaces/page.interface';
 
-const pages: Page[] = [
-    { title: 'Home', path: '/' },
-]
+const pages: Page[] = []
 
 const unauthenticatedPages: Page[] = [
     { title: 'Login', path: '/login' },

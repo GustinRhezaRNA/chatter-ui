@@ -14,7 +14,7 @@ const useGetChats = (variables: QueryChatsArgs) => {
   return useQuery(getChatsDocument, {
     variables,
     fetchPolicy: 'cache-and-network',
-    pollInterval: 5000, 
+    notifyOnNetworkStatusChange: true,
   });
 };
 
