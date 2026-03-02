@@ -11,6 +11,13 @@ interface GuardProps {
     children: React.ReactNode;
 }
 
+type GraphQLErrorExtensions = {
+    code?: string
+    originalError?: {
+        statusCode?: number
+    }
+}
+
 const Guard = ({ children }: GuardProps) => {
     const { data: user, error } = useGetMe()
     const { path } = usePath();
@@ -32,7 +39,7 @@ const Guard = ({ children }: GuardProps) => {
         if (error) {
             const isAuthError = error.graphQLErrors?.some(
                 (e) => e.extensions?.code === 'UNAUTHENTICATED' ||
-                    (e.extensions?.originalError as any)?.statusCode === 401
+                    (e.extensions as GraphQLErrorExtensions)?.originalError?.statusCode === 401
             );
             const isNetworkError = !!error.networkError;
 

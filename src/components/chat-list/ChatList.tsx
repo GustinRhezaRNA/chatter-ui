@@ -23,7 +23,7 @@ const ChatList: React.FC = () => {
 
     useEffect(() => {
         countChats();
-    }, []);
+    }, [countChats]);
 
     useEffect(() => {
         if (data?.chats.length === 0) {

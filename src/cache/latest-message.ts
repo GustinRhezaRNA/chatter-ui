@@ -1,9 +1,9 @@
-import { ApolloCache } from "@apollo/client";
+import { ApolloCache, type NormalizedCacheObject } from "@apollo/client";
 import { type Message } from "../gql/graphql";
 import { getChatsDocument } from "../hooks/useGetChats";
 
 export const updateLatestMessage = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<NormalizedCacheObject>,
   message: Message
 ) => {
   const chats = [

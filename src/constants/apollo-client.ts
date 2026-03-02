@@ -6,9 +6,16 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { WS_URL } from './urls';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import type { FieldFunctionOptions } from '@apollo/client';
+
+type GraphQLErrorExtensions = {
+  originalError?: {
+    statusCode?: number;
+  };
+};
 
 const logoutLink = onError((error) => {
-  if (error.graphQLErrors?.length && (error.graphQLErrors[0].extensions?.originalError as any)?.statusCode === 401) {
+  if (error.graphQLErrors?.length && (error.graphQLErrors[0].extensions as GraphQLErrorExtensions)?.originalError?.statusCode === 401) {
     if (!excludedRoutes.includes(window.location.pathname)) {
       onLogout();
     }
@@ -27,8 +34,15 @@ const wsLink = new GraphQLWsLink(
 
 const splitLink = split(
   ({ query }) => {
-    const definition = getMainDefinition(query);
-    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+    const definition = getMainDefinition(query) as {
+      kind: string;
+      operation?: string;
+    };
+
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
   },
   wsLink,
   httpLink
@@ -55,18 +69,23 @@ const client = new ApolloClient({
   link: logoutLink.concat(splitLink),
 });
 
-function merge(existing: any, incoming: any, { args }: { args: Record<string, any> | null }) {
+function merge<T>(
+  existing: T[] = [],
+  incoming: T[],
+  { args }: FieldFunctionOptions
+): T[] {
   const merged = existing ? existing.slice(0) : [];
-  if (incoming) {
-    if (args) {
-      const skip = args.skip || 0;
-      for (let i = 0; i < incoming.length; ++i) {
-        merged[skip + i] = incoming[i];
-      }
-    } else {
-      return incoming;
+
+  if (args && "skip" in args) {
+    const skip = (args as { skip?: number }).skip ?? 0;
+
+    for (let i = 0; i < incoming.length; ++i) {
+      merged[skip + i] = incoming[i];
     }
+  } else {
+    return incoming;
   }
+
   return merged;
 }
 

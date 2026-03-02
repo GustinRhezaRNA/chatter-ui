@@ -1,9 +1,9 @@
-import type { ApolloCache } from '@apollo/client';
+import type { ApolloCache, NormalizedCacheObject } from '@apollo/client';
 import type { Message } from '../gql/graphql';
 import { getMessagesDocument } from '../hooks/useGetMessages';
 import { PAGE_SIZE } from '../constants/page-size';
 
-export const updateMessages = (cache: ApolloCache<any>, message: Message) => {
+export const updateMessages = (cache: ApolloCache<NormalizedCacheObject>, message: Message) => {
   const messageQueryOptions = {
     query: getMessagesDocument,
     variables: {

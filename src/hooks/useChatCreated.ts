@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client';
+import { ApolloCache, useSubscription, type NormalizedCacheObject } from '@apollo/client';
 import { graphql } from '../gql';
 import { updateChats } from '../cache/chats';
 import type { Chat } from '../gql/graphql';
@@ -15,7 +15,7 @@ export const useChatCreated = () => {
     return useSubscription(chatCreatedDocument, {
         onData: ({ client, data }) => {
             if (data.data?.chatCreated) {
-                updateChats(client.cache, data.data.chatCreated as Chat);
+                updateChats(client.cache as ApolloCache<NormalizedCacheObject>, data.data.chatCreated as Chat);
             }
         },
     });
