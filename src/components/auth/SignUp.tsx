@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ApolloError } from '@apollo/client'
 import Auth, { type FieldErrors } from './Auth'
 import { Link } from 'react-router-dom'
 import { Checkbox, FormControlLabel, TextField } from '@mui/material'
@@ -88,7 +89,7 @@ const SignUp = () => {
                         },
                     });
                 } catch (err) {
-                    const allErrors = extractAllErrors(err);
+                    const allErrors = extractAllErrors(err as ApolloError);
                     if (allErrors.length > 0) {
                         setFieldErrors(routeErrors(allErrors));
                     } else {

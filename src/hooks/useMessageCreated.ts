@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client';
+import { ApolloCache, type NormalizedCacheObject, useSubscription } from '@apollo/client';
 import { graphql } from '../gql';
 import type { Message, SubscriptionMessageCreatedArgs } from '../gql/graphql';
 import { updateMessages } from '../cache/messages';
@@ -20,8 +20,8 @@ export const useMessageCreated = (
     variables,
     onData: ({ client, data }) => {
       if (data.data) {
-        updateMessages(client.cache, data.data.messageCreated);
-        updateLatestMessage(client.cache, data.data.messageCreated);
+        updateMessages(client.cache as ApolloCache<NormalizedCacheObject>, data.data.messageCreated);
+        updateLatestMessage(client.cache as ApolloCache<NormalizedCacheObject>, data.data.messageCreated);
         onMessage?.(data.data.messageCreated);
       }
     },
