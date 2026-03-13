@@ -3,7 +3,7 @@ import { onError } from '@apollo/client/link/error';
 import excludedRoutes from './excluded-routes';
 import { onLogout } from '../utils/logout';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import { WS_URL } from './urls';
+import { API_URL, WS_URL } from './urls';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import type { FieldFunctionOptions } from '@apollo/client';
@@ -23,7 +23,7 @@ const logoutLink = onError((error) => {
 });
 
 const httpLink = new HttpLink({
-  uri: `/graphql`,
+  uri: `${API_URL}/graphql`,
 });
 
 const wsLink = new GraphQLWsLink(
