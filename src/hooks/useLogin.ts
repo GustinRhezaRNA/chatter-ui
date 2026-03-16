@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { API_URL } from '../constants/urls';
 import client from '../constants/apollo-client';
 import { UNKNOWN_ERROR_MESSAGE } from '../constants/errors';
-import { setToken } from '../utils/token';
 import { commonFetch } from '../utils/fetch';
+import { setToken } from '../utils/token';
 
 interface LoginRequest {
   email: string;
@@ -28,7 +28,10 @@ const useLogin = () => {
         setError(msg);
         return msg;
       }
-      setToken(await res.text());
+      const data = await res.json();
+      if (data.token) {
+        setToken(data.token);
+      }
       setError('');
       await client.refetchQueries({ include: 'active' });
       return undefined;
