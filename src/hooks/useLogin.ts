@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { API_URL } from '../constants/urls';
 import client from '../constants/apollo-client';
 import { UNKNOWN_ERROR_MESSAGE } from '../constants/errors';
+import { setToken } from '../utils/token';
+import { commonFetch } from '../utils/fetch';
 
 interface LoginRequest {
   email: string;
@@ -13,7 +15,7 @@ const useLogin = () => {
 
   const login = async (request: LoginRequest): Promise<string | undefined> => {
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await commonFetch(`${API_URL}/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -26,6 +28,7 @@ const useLogin = () => {
         setError(msg);
         return msg;
       }
+      setToken(await res.text());
       setError('');
       await client.refetchQueries({ include: 'active' });
       return undefined;

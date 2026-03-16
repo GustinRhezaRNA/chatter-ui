@@ -10,6 +10,7 @@ import { snackVar } from "../../constants/snack";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUpdateUser } from "../../hooks/useUpdateUser";
+import { commonFetch } from "../../utils/fetch";
 
 const Profile = () => {
     const me = useGetMe();
@@ -44,7 +45,7 @@ const Profile = () => {
         try {
             const formData = new FormData();
             formData.append('image', event.target.files![0]);
-            const res = await fetch(`${API_URL}/users/image`, {
+            const res = await commonFetch(`${API_URL}/users/image`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include',
