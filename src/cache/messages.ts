@@ -12,13 +12,20 @@ export const updateMessages = (cache: ApolloCache<NormalizedCacheObject>, messag
       limit: PAGE_SIZE,
     },
   };
-  const messages = cache.readQuery({
+  
+  const messages = cache.readQuery<any>({
     ...messageQueryOptions,
   });
+
+  const existingMessages = messages?.messages || [];
+  if (existingMessages.some((m: Message) => m._id === message._id)) {
+    return;
+  }
+
   cache.writeQuery({
     ...messageQueryOptions,
     data: {
-      messages: (messages?.messages || []).concat(message),
+      messages: [...existingMessages, message],
     },
   });
 };
