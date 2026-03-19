@@ -36,7 +36,14 @@ const wsLink = new GraphQLWsLink(
     url: `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${WS_URL}/graphql`,
     connectionParams: {
       token: getToken(),
-    }
+    },
+    shouldRetry: () => true,
+    retryAttempts: Infinity,
+    retryWait: async (retries) => {
+      await new Promise((resolve) =>
+        setTimeout(resolve, Math.min(1000 * 2 ** retries, 30000))
+      );
+    },
   })
 );
 
