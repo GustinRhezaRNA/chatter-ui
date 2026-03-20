@@ -12,7 +12,8 @@ const Branding = () => {
                 onClick={() => router.navigate('/')}
                 sx={{
                     mr: 2,
-                    display: { display: { xs: 'none', md: 'flex' } },
+                    display: { xs: 'none', md: 'flex' },
+                    flexGrow: 1,
                     fontFamily: 'monospace',
                     fontWeight: 700,
                     letterSpacing: '.3rem',
