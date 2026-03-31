@@ -61,6 +61,7 @@ const SignUp = () => {
                 </span>
             }
             submitLabel="Create account"
+            passwordAutoComplete="new-password"
             fieldErrors={fieldErrors}
             extraFields={[
                 <TextField
