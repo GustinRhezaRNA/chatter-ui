@@ -17,6 +17,7 @@ interface AuthProps {
     fieldErrors?: FieldErrors;
     title: string;
     subtitle: React.ReactNode;
+    passwordAutoComplete?: string;
     /** @deprecated use fieldErrors instead */
     error?: string;
 }
@@ -45,7 +46,7 @@ const inputStyles = {
     mb: 2,
 };
 
-const Auth = ({ submitLabel, onSubmit, children, error, fieldErrors, extraFields, title, subtitle }: AuthProps) => {
+const Auth = ({ submitLabel, onSubmit, children, error, fieldErrors, extraFields, title, subtitle, passwordAutoComplete }: AuthProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { data } = useGetMe();
@@ -143,6 +144,7 @@ const Auth = ({ submitLabel, onSubmit, children, error, fieldErrors, extraFields
                             onChange={(event) => setEmail(event.target.value)}
                             error={!!emailError}
                             helperText={emailError}
+                            autoComplete="email"
                             sx={inputStyles}
                         />
 
@@ -155,6 +157,7 @@ const Auth = ({ submitLabel, onSubmit, children, error, fieldErrors, extraFields
                             onChange={(event) => setPassword(event.target.value)}
                             error={!!passwordError}
                             helperText={passwordError}
+                            autoComplete={passwordAutoComplete || "current-password"}
                             sx={inputStyles}
                         />
 

@@ -1,10 +1,22 @@
+import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import Forum from '@mui/icons-material/Forum'
 import router from '../../Routes'
+
 const Branding = () => {
     return (
         <>
-            <Forum sx={{ display: { xs: 'none', md: 'flex' } }} />
+            <Box
+                component="img"
+                src="/icon.png"
+                alt="Chatter icon"
+                onClick={() => router.navigate('/')}
+                sx={{
+                    display: { xs: 'none', md: 'block' },
+                    cursor: 'pointer',
+                    height: 48,
+                    mr: 2,
+                }}
+            />
             <Typography
                 variant="h6"
                 noWrap
@@ -13,7 +25,6 @@ const Branding = () => {
                 sx={{
                     mr: 2,
                     display: { xs: 'none', md: 'flex' },
-                    flexGrow: 1,
                     fontFamily: 'monospace',
                     fontWeight: 700,
                     letterSpacing: '.3rem',
